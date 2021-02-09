@@ -4,11 +4,18 @@ const PLAYER_COLOUR = '#ff0000';
 const EMPTY_COLOUR = '#ffffff';
 const POINT_COLOUR = '#0000ff';
 
+const OBJECT = {
+	NONE: 0,
+	PLAYER: 1,
+	POINT: 2
+}
+
 class Cell {
 	constructor(context, column, row) {
 		this.row = row;
 		this.column = column;
 		this.context = context;
+		this.object = OBJECT.NONE;
 		this.x = CELL_GAP + (CELL_SIZE + CELL_GAP) * column;
 		this.y = CELL_GAP + (CELL_SIZE + CELL_GAP) * row;
 	}
@@ -17,6 +24,14 @@ class Cell {
 		const context = this.context;
 		context.fillStyle = colour;
 		context.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
+
+		return this;
+	}
+
+	setObject(object) {
+		this.object = object;
+
+		return this;
 	}
 }
 
@@ -53,7 +68,7 @@ class Grid {
 
 class Player {
 	constructor(grid, startX, startY, destination) {
-		grid.cells[startX][startY].fill(PLAYER_COLOUR);
+		grid.cells[startX][startY].fill(PLAYER_COLOUR).setObject(OBJECT.PLAYER);
 
 		this.x = startX;
 		this.y = startY;
@@ -62,29 +77,36 @@ class Player {
 	}
 
 	move() {
-		grid.cells[this.x][this.y].fill(EMPTY_COLOUR);
+		this.grid.cells[this.x][this.y].fill(EMPTY_COLOUR).setObject(OBJECT.NONE);
+		let newY, newX;
 
 		switch (this.destination) {
 			case 'ArrowUp':
-				this.y = this.y - 1;
+				newY = this.y - 1;
+				this.y = newY < 0 ? grid.height - 1 : newY;
 				break;
 			case 'ArrowDown':
-				this.y = this.y + 1;
+				newY = this.y + 1;
+				this.y = newY >= grid.height ? 0 : newY;
 				break;
 			case 'ArrowLeft':
-				this.x = this.x - 1;
+				newX = this.x - 1;
+				this.x = newX < 0 ? grid.width - 1 : newX;
 				break;
 			case 'ArrowRight':
-				this.x = this.x + 1;
+				newX = this.x + 1;
+				this.x = newX >= grid.width ? 0 : newX;
 				break;
 		}
 
-		grid.cells[this.x][this.y].fill(PLAYER_COLOUR);
+		this.grid.cells[this.x][this.y].fill(PLAYER_COLOUR).setObject(OBJECT.PLAYER);
 	}
 
 	listenControl() {
 		document.addEventListener('keydown', event => {
-			this.destination = event.key;
+			if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+				this.destination = event.key;
+			}
 		});
 	}
 }
@@ -104,7 +126,7 @@ class Game {
 
 		player.listenControl();
 
-		setInterval(() => {
+		const timer = setInterval(() => {
 			player.move();
 		}, this.actualSpeed);
 	}
