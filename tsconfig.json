@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "es3",
+		"module": "ESNext",
+		"lib": [
+			"ESNext",
+			"DOM"
+		],
+		"outDir": "./bin",
+		"baseUrl": "./src",
+		"paths": {
+            "Classes/*": ["./classes/*"],
+			"Root/*": ["./*"]
+        },
+        "strict": true,
+        "esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "node"
+	},
+	"exclude": ["node_modules"]
+}
