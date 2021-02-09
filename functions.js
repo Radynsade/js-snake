@@ -1,6 +1,7 @@
 const CELL_SIZE = 12;
-const CELL_GAP = 2;
+const CELL_GAP = 1;
 const PLAYER_COLOUR = '#ff0000';
+const EMPTY_COLOUR = '#ffffff';
 const POINT_COLOUR = '#0000ff';
 
 class Cell {
@@ -50,15 +51,61 @@ class Grid {
 	}
 }
 
+class Player {
+	constructor(grid, startX, startY, destination) {
+		grid.cells[startX][startY].fill(PLAYER_COLOUR);
+
+		this.x = startX;
+		this.y = startY;
+		this.grid = grid;
+		this.destination = destination;
+	}
+
+	move() {
+		grid.cells[this.x][this.y].fill(EMPTY_COLOUR);
+
+		switch (this.destination) {
+			case 'ArrowUp':
+				this.y = this.y - 1;
+				break;
+			case 'ArrowDown':
+				this.y = this.y + 1;
+				break;
+			case 'ArrowLeft':
+				this.x = this.x - 1;
+				break;
+			case 'ArrowRight':
+				this.x = this.x + 1;
+				break;
+		}
+
+		grid.cells[this.x][this.y].fill(PLAYER_COLOUR);
+	}
+
+	listenControl() {
+		document.addEventListener('keydown', event => {
+			this.destination = event.key;
+		});
+	}
+}
+
 class Game {
 	constructor(grid, initialSpeed, maxSpeed, acceleration) {
 		this.grid = grid;
 		this.initialSpeed = initialSpeed;
 		this.maxSpeed = maxSpeed;
-		this.acceleration = acceleration
+		this.acceleration = acceleration;
+		this.actualSpeed = 1000 / initialSpeed;
 	}
 
 	start() {
+		const destinations = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'];
+		const player = new Player(this.grid, 1, 30, destinations[Math.floor(Math.random() * destinations.length)]);
 
+		player.listenControl();
+
+		setInterval(() => {
+			player.move();
+		}, this.actualSpeed);
 	}
 }
