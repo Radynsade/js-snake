@@ -1,35 +1,27 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const devMode = false;
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-// Need to be configured
-const PreloadWebpackPlugin = require('preload-webpack-plugin');
-
 module.exports = {
-	entry: './src/index.tsx',
+	entry: './src/index.ts',
 	output: {
 		filename: 'index.[contenthash].js',
-		publicPath: "/",
+		publicPath: "",
 		path: path.resolve(__dirname, 'bin'),
 	},
 	mode: 'production',
 	resolve: {
 		extensions: ['.jsx', '.html', '.js', '.ts', '.tsx'],
 		alias: {
-			Components: path.resolve(__dirname, './src/components'),
-			Appearance: path.resolve(__dirname, './src/appearance'),
-			Routes: path.resolve(__dirname, './src/routes'),
-			Libraries: path.resolve(__dirname, './src/libraries')
+			Classes: path.resolve(__dirname, './src/classes'),
+			Interfaces: path.resolve(__dirname, './src/interfaces'),
+			Root: path.resolve(__dirname, './src'),
 		}
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
-			title: 'Ardy',
+			title: 'Snake!',
 			template: './src/index.html'
 		}),
 	],

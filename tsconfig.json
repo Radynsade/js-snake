@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "es3",
+		"target": "es5",
 		"module": "ESNext",
 		"lib": [
 			"ESNext",
@@ -10,6 +10,7 @@
 		"baseUrl": "./src",
 		"paths": {
             "Classes/*": ["./classes/*"],
+			"Interfaces/*": ["./interfaces/*"],
 			"Root/*": ["./*"]
         },
         "strict": true,
