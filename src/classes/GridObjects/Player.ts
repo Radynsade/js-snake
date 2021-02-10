@@ -4,6 +4,8 @@ import Point from 'Classes/GridObjects/Point';
 import { Direction } from 'Root/enums';
 
 export default class Player extends GridObject {
+	protected lastX: number;
+	protected lastY: number;
 	public static id: number = 1;
 
 	constructor(
@@ -15,6 +17,28 @@ export default class Player extends GridObject {
 		}
 	) {
 		super(grid, { ...properties, ...{ colour: '#ff0000', typeId: Player.id } });
+
+		const { x, y, direction } = properties;
+
+		let lastX = x, lastY = y;
+
+		switch (direction) {
+			case Direction.Up:
+				lastY = y + 1;
+				break;
+			case Direction.Down:
+				lastY = y - 1;
+				break;
+			case Direction.Left:
+				lastX = x + 1;
+				break;
+			case Direction.Right:
+				lastX = x - 1;
+				break;
+		}
+
+		this.lastX = lastX;
+		this.lastY = lastY;
 	}
 
 	public async listenControl(): Promise<void> {
