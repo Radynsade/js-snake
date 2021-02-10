@@ -16,7 +16,7 @@ export default class Point extends GridObject {
 		super(grid, { ...properties, ...{ colour: '#0000ff', typeId: Point.id } });
 	}
 
-	public static async randomSpawn(grid: Grid): Promise<Point> {
+	public static randomSpawn(grid: Grid): Point {
 		let spawnX, spawnY;
 
 		while (true) {

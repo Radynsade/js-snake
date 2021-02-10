@@ -17,12 +17,16 @@ export default class Player extends GridObject {
 		super(grid, { ...properties, ...{ colour: '#ff0000', typeId: Player.id } });
 	}
 
-	public async listenControl(): Promise<void> {
-
+	public listenControl(): void {
+		document.addEventListener('keydown', event => {
+			if (event.key === Direction.Up || event.key === Direction.Down || event.key === Direction.Left || event.key === Direction.Right) {
+				this.setDirection(event.key);
+			}
+		});
 	}
 
-	protected async onMove(oldX: number, oldY: number, newX: number, newY: number): Promise<void> {
-		if (this.grid.cells[this.x][this.y].object === Point.id) {
+	protected onMove(oldX: number, oldY: number, newX: number, newY: number): void {
+		if (this.grid.cells[newX][newY].object === Point.id) {
 			Point.randomSpawn(this.grid);
 		}
 	}

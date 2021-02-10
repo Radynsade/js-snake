@@ -26,7 +26,7 @@ export default abstract class GridObject {
 		this._typeId = typeId;
 		this._grid = grid;
 		this._direction = direction;
-		this._colour = this.colour;
+		this._colour = colour;
 		this.x = x;
 		this.y = y;
 	}
@@ -53,31 +53,41 @@ export default abstract class GridObject {
 		return this;
 	}
 
-	public async move(): Promise<void> {
-		let newX = NaN, newY = NaN;
+	public move() {
+		const oldX = this.x;
+		const oldY = this.y;
+		let newX, newY;
 
 		switch (this.direction) {
 			case Direction.Up:
 				newY = this.y - 1;
 				newY = newY < 0 ? this.grid.height - 1 : newY;
+				newX = this.x;
 				break;
 			case Direction.Down:
 				newY = this.y + 1;
 				newY = newY >= this.grid.height ? 0 : newY;
+				newX = this.x;
 				break;
 			case Direction.Left:
 				newX = this.x - 1;
 				newX = newX < 0 ? this.grid.width - 1 : newX;
+				newY = this.y;
 				break;
 			case Direction.Right:
 				newX = this.x + 1;
 				newX = newX >= this.grid.width ? 0 : newX;
+				newY = this.y;
 				break;
 		}
 
-		if (this.onMove) this.onMove(this.x, this.y, newX, newY);
+		if (this.onMove) this.onMove(oldX, oldY, newX, newY);
 
-		this.grid.cells[this.x][this.y].fill(Grid.background).setObject(0);
+		this.x = newX;
+		this.y = newY;
+
+		this.grid.cells[oldX][oldY].fill(Grid.background).setObject(0);
+		this.grid.cells[newX][newY].fill(this.colour).setObject(this.typeId);
 	}
 
 	protected onMove?(

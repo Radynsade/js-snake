@@ -1,5 +1,7 @@
-import 'Classes/Grid';
 import Grid from 'Classes/Grid';
+import Player from 'Classes/GridObjects/Player';
+import Point from 'Classes/GridObjects/Point';
+import { Direction } from 'Root/enums';
 
 export default class Game {
 	protected _grid: Grid;
@@ -25,6 +27,10 @@ export default class Game {
 		this._actualSpeed = 1000 / initialSpeed;
 	}
 
+	public get grid() {
+		return this._grid;
+	}
+
 	public get actualSpeed() {
 		return this._actualSpeed;
 	}
@@ -39,5 +45,25 @@ export default class Game {
 
 	public get acceleration() {
 		return this._acceleration;
+	}
+
+	public start(): void {
+		const directions = [Direction.Up, Direction.Down, Direction.Left, Direction.Right];
+
+		const player = new Player(
+			this.grid,
+			{
+				x: Math.floor(this.grid.width / 2 + (Math.floor(Math.random() * 5) - 5)),
+				y: Math.floor(this.grid.height / 2 + (Math.floor(Math.random() * 4) - 4)),
+				direction: directions[Math.floor(Math.random() * directions.length)]
+			}
+		);
+
+		player.listenControl();
+		Point.randomSpawn(this.grid);
+
+		const timer = setInterval(() => {
+			player.move();
+		}, this.actualSpeed);
 	}
 }
