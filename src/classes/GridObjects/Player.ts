@@ -1,9 +1,10 @@
 import Grid from 'Classes/Grid';
 import GridObject from 'Classes/GridObject';
+import Point from 'Classes/GridObjects/Point';
 import { Direction } from 'Root/enums';
 
 export default class Player extends GridObject {
-	public static colour: string = '#ff0000';
+	public static id: number = 1;
 
 	constructor(
 		grid: Grid,
@@ -13,6 +14,16 @@ export default class Player extends GridObject {
 			direction: Direction;
 		}
 	) {
-		super(grid, properties);
+		super(grid, { ...properties, ...{ colour: '#ff0000', typeId: Player.id } });
+	}
+
+	public async listenControl(): Promise<void> {
+
+	}
+
+	protected async onMove(oldX: number, oldY: number, newX: number, newY: number): Promise<void> {
+		if (this.grid.cells[this.x][this.y].object === Point.id) {
+			Point.randomSpawn(this.grid);
+		}
 	}
 }

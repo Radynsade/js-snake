@@ -3,7 +3,7 @@ import GridObject from 'Classes/GridObject';
 import { Direction } from 'Root/enums';
 
 export default class Point extends GridObject {
-	public static colour: string = '#0000ff';
+	public static id: number = 2;
 
 	constructor(
 		grid: Grid,
@@ -13,6 +13,25 @@ export default class Point extends GridObject {
 			direction: Direction;
 		}
 	) {
-		super(grid, properties);
+		super(grid, { ...properties, ...{ colour: '#0000ff', typeId: Point.id } });
+	}
+
+	public static async randomSpawn(grid: Grid): Promise<Point> {
+		let spawnX, spawnY;
+
+		while (true) {
+			spawnX = Math.floor(Math.random() * (grid.width - 1));
+			spawnY = Math.floor(Math.random() * (grid.height - 1));
+
+			if (grid.cells[spawnX][spawnY].object === 0) {
+				break;
+			}
+		}
+
+		return new Point(grid, {
+			x: spawnX,
+			y: spawnY,
+			direction: Direction.Up
+		});
 	}
 }
