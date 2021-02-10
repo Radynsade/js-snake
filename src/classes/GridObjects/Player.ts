@@ -17,7 +17,7 @@ export default class Player extends GridObject {
 		super(grid, { ...properties, ...{ colour: '#ff0000', typeId: Player.id } });
 	}
 
-	public listenControl(): void {
+	public async listenControl(): Promise<void> {
 		document.addEventListener('keydown', event => {
 			if (event.key === Direction.Up || event.key === Direction.Down || event.key === Direction.Left || event.key === Direction.Right) {
 				this.setDirection(event.key);

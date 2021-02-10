@@ -53,7 +53,7 @@ export default abstract class GridObject {
 		return this;
 	}
 
-	public move() {
+	public async move() {
 		const oldX = this.x;
 		const oldY = this.y;
 		let newX, newY;

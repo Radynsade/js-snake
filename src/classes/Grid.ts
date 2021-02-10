@@ -53,7 +53,7 @@ export default class Grid {
 		return this._height;
 	}
 
-	public putInto(element: HTMLElement) {
+	public async putInto(element: HTMLElement) {
 		element.appendChild(this.canvas);
 	}
 }
