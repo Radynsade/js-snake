@@ -40,25 +40,25 @@ module.exports = {
             }
 		]
 	},
-	optimization: {
-		splitChunks: {
-			chunks: 'async',
-			cacheGroups: {
-				common: {
-					name: 'common',
-					minChunks: 2,
-					chunks: 'initial',
-					priority: 10,
-					reuseExistingChunk: true,
-					enforce: true
-				},
-				vendor: {
-					test: /[\\/]node_modules[\\/]/,
-					name: 'vendor',
-					chunks: 'all',
-					priority: 20
-				}
-			}
-		}
-	}
+	// optimization: {
+	// 	splitChunks: {
+	// 		chunks: 'async',
+	// 		cacheGroups: {
+	// 			common: {
+	// 				name: 'common',
+	// 				minChunks: 2,
+	// 				chunks: 'initial',
+	// 				priority: 10,
+	// 				reuseExistingChunk: true,
+	// 				enforce: true
+	// 			},
+	// 			vendor: {
+	// 				test: /[\\/]node_modules[\\/]/,
+	// 				name: 'vendor',
+	// 				chunks: 'all',
+	// 				priority: 20
+	// 			}
+	// 		}
+	// 	}
+	// }
 };

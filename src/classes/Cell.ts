@@ -1,4 +1,7 @@
+import { Direction } from 'Root/enums';
+
 export default class Cell {
+	public direction?: Direction;
 	protected context: CanvasRenderingContext2D;
 	protected _object: number = 0;
 	protected _column: number;
@@ -6,7 +9,7 @@ export default class Cell {
 	protected x: number;
 	protected y: number;
 	private static _gap: number = 1;
-	private static _size: number = 10;
+	private static _size: number = 15;
 
 	constructor(
 		context: CanvasRenderingContext2D,
@@ -42,6 +45,15 @@ export default class Cell {
 
 	public setObject(id: number) {
 		this._object = id;
+
+		return this;
+	}
+
+	public clean() {
+		const { context } = this;
+
+		context.fillStyle = '#ffffff';
+		context.fillRect(this.x - 1, this.y - 1, Cell.size + 1, Cell.size + 1);
 
 		return this;
 	}

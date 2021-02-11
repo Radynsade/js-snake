@@ -4,6 +4,9 @@ import { Direction } from 'Root/enums';
 export default abstract class GridObject {
 	public x: number;
 	public y: number;
+	private _prevX: number;
+	private _prevY: number;
+	private _prevDirection: Direction;
 	protected _grid: Grid;
 	protected _direction: Direction;
 	protected _colour: string;
@@ -29,6 +32,21 @@ export default abstract class GridObject {
 		this._colour = colour;
 		this.x = x;
 		this.y = y;
+		this._prevX = x;
+		this._prevY = y;
+		this._prevDirection = direction;
+	}
+
+	public get prevX() {
+		return this._prevX;
+	}
+
+	public get prevY() {
+		return this._prevY;
+	}
+
+	public get prevDirection() {
+		return this._prevDirection;
 	}
 
 	public get typeId() {
@@ -48,14 +66,32 @@ export default abstract class GridObject {
 	}
 
 	public setDirection(direction: Direction) {
+		this._prevDirection = this._direction;
 		this._direction = direction;
 
 		return this;
 	}
 
-	public async move() {
+	public move() {
 		const oldX = this.x;
 		const oldY = this.y;
+		const { newX, newY } = this.getNewPosition();
+
+		if (this.beforeMove) this.beforeMove(newX, newY);
+
+		this._prevX = oldX;
+		this._prevY = oldY;
+		this.x = newX;
+		this.y = newY;
+
+		this.grid.cells[oldX][oldY].clean().setObject(0);
+		this.grid.cells[newX][newY].fill(this.colour).setObject(this.typeId);
+
+		if (this.prevDirection !== this.direction) this._prevDirection = this.direction;
+		if (this.afterMove) this.afterMove(oldX, oldY);
+	}
+
+	protected getNewPosition(): { newX: number, newY: number } {
 		let newX, newY;
 
 		switch (this.direction) {
@@ -81,18 +117,15 @@ export default abstract class GridObject {
 				break;
 		}
 
-		if (this.onMove) this.onMove(oldX, oldY, newX, newY);
-
-		this.x = newX;
-		this.y = newY;
-
-		this.grid.cells[oldX][oldY].fill(Grid.background).setObject(0);
-		this.grid.cells[newX][newY].fill(this.colour).setObject(this.typeId);
+		return { newX, newY };
 	}
 
-	protected onMove?(
+	protected afterMove?(
 		oldX: number,
-		oldY: number,
+		oldY: number
+	): void;
+
+	protected beforeMove?(
 		newX: number,
 		newY: number
 	): void;

@@ -9,6 +9,7 @@ export default class Game {
 	protected _maxSpeed: number;
 	protected _acceleration: number;
 	protected _actualSpeed: number;
+	protected play: boolean = false;
 
 	constructor(
 		grid: Grid,
@@ -50,7 +51,10 @@ export default class Game {
 	public start(): void {
 		const directions = [Direction.Up, Direction.Down, Direction.Left, Direction.Right];
 
+		this.play = true;
+
 		const player = new Player(
+			this,
 			this.grid,
 			{
 				x: Math.floor(this.grid.width / 2 + (Math.floor(Math.random() * 5) - 5)),
@@ -59,11 +63,27 @@ export default class Game {
 			}
 		);
 
-		player.listenControl();
 		Point.randomSpawn(this.grid);
+		player.listenControl();
 
-		const timer = setInterval(() => {
-			player.move();
+		const onTick = () => {
+			if (this.play) {
+				(player as Player).move();
+				setTimeout(onTick, this.actualSpeed);
+			}
+		}
+
+		setTimeout(() => {
+			onTick();
 		}, this.actualSpeed);
+	}
+
+	public accelerate = (): void => {
+		this._initialSpeed += this.acceleration;
+		this._actualSpeed = 1000 / this._initialSpeed;
+	}
+
+	public stop = (): void => {
+		this.play = false;
 	}
 }
